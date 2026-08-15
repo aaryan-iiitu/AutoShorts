@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoshorts-ai"
+version = "0.1.0"
+description = "A strictly zero-cost automated YouTube Shorts generator."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "groq",
+    "google-api-python-client",
+    "google-auth-oauthlib",
+    "google-auth-httplib2",
+    "edge-tts",
+    "ffmpeg-python",
+    "requests",
+    "tenacity",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-mock"
+]

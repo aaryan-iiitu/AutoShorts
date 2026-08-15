@@ -1,0 +1,15 @@
+# APIs
+groq
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+
+# Tools
+edge-tts
+ffmpeg-python
+requests
+tenacity
+
+# Config & Validation
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
