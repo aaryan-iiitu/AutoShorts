@@ -24,6 +24,7 @@ def parse_args():
     parser.add_argument("--no-upload", action="store_true", help="Skip YouTube upload and save video locally")
     parser.add_argument("--dry-run", action="store_true", help="Run without calling external APIs (skips after history check)")
     parser.add_argument("--topic", type=str, help="Override topic generation with a specific topic")
+    parser.add_argument("--privacy", type=str, default="public", choices=["public", "private", "unlisted"], help="YouTube video privacy status")
     return parser.parse_args()
 
 def main():
@@ -54,7 +55,7 @@ def main():
     )
     
     # Run Pipeline
-    privacy = "private" if args.no_upload or args.dry_run else "private" # Defaulting to private for dev safety
+    privacy = args.privacy if not (args.no_upload or args.dry_run) else "private"
     upload = not args.no_upload
     
     try:
