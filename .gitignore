@@ -45,3 +45,4 @@ youtube_credentials.json
 # OS generated files
 .DS_Store
 Thumbs.db
+local_output.mp4

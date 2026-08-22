@@ -1,4 +1,4 @@
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type, before_sleep_log
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception, retry_if_exception_type, before_sleep_log
 import logging
 from config.settings import settings
 from core.exceptions import QuotaExceededError, CostGuardError
@@ -22,7 +22,7 @@ def api_retry():
     return retry(
         wait=wait_exponential(multiplier=2, min=2, max=10),
         stop=stop_after_attempt(settings.max_retries + 1),  # stop_after_attempt counts the initial try + retries
-        retry=retry_if_exception_type(Exception) & retry_if_exception_type(lambda e: is_retryable(e)),
+        retry=retry_if_exception_type(Exception) & retry_if_exception(is_retryable),
         before_sleep=before_sleep_log(stdlib_logger, logging.WARNING),
         reraise=True
     )

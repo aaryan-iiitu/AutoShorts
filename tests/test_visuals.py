@@ -50,3 +50,21 @@ def test_fetch_assets_no_fallback_raises(mocker, tmp_path):
     
     with pytest.raises(AssetFetchError):
         provider.fetch_assets(script, 1, str(tmp_path))
+
+def test_fallback_asset_exists_and_usable():
+    import os
+    import subprocess
+    fallback_path = os.path.join("assets", "video", "fallback.mp4")
+    assert os.path.exists(fallback_path), "Fallback video asset must exist."
+    
+    # Verify it is a usable video using ffprobe
+    cmd = [
+        "ffprobe", "-v", "error", 
+        "-select_streams", "v:0", 
+        "-show_entries", "stream=codec_type", 
+        "-of", "default=nw=1:nk=1", 
+        fallback_path
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    assert result.returncode == 0, f"ffprobe failed: {result.stderr}"
+    assert result.stdout.strip() == "video", "Fallback asset must contain a video stream."

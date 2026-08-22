@@ -38,7 +38,7 @@ class FFmpegRenderer(IVideoRenderer):
             if asset.filepath.lower().endswith(('.jpg', '.jpeg', '.png')):
                 cmd.extend(["-loop", "1", "-t", "10", "-i", asset.filepath]) # 10 seconds is usually enough for a short clip
             else:
-                cmd.extend(["-i", asset.filepath])
+                cmd.extend(["-stream_loop", "-1", "-i", asset.filepath])
             
         cmd.extend(["-i", state.audio_path])
         audio_idx = len(state.assets)

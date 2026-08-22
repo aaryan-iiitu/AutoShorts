@@ -4,7 +4,7 @@ from urllib.parse import quote_plus
 from config.settings import settings
 from core.cost_guard import cost_guard
 from core.logger import logger
-from core.exceptions import AssetFetchError, QuotaExceededError
+from core.exceptions import AssetFetchError, QuotaExceededError, CostGuardError
 from models.domain import Script
 from services.interfaces import IVisualProvider
 from utils.network import get_session
@@ -23,26 +23,43 @@ class PexelsUnsplashProvider(IVisualProvider):
         # Determine search query from topic
         query = script.topic
         
-        # 1. Try Pexels (Videos)
-        if settings.pexels_api_key:
-            pexels_urls = self._search_pexels(query, max_assets)
-            for url in pexels_urls:
-                if len(downloaded_paths) >= max_assets:
-                    break
-                path = self._download_asset(url, output_dir, prefix="pexels_", ext=".mp4")
-                if path:
-                    downloaded_paths.append(path)
-                    
-        # 2. Try Unsplash (Images) if we still need assets
-        if len(downloaded_paths) < max_assets and settings.unsplash_api_key:
-            needed = max_assets - len(downloaded_paths)
-            unsplash_urls = self._search_unsplash(query, needed)
-            for url in unsplash_urls:
-                if len(downloaded_paths) >= max_assets:
-                    break
-                path = self._download_asset(url, output_dir, prefix="unsplash_", ext=".jpg")
-                if path:
-                    downloaded_paths.append(path)
+        try:
+            # 1. Try Pexels (Videos)
+            if settings.pexels_api_key:
+                pexels_urls = self._search_pexels(query, max_assets)
+                consecutive_failures = 0
+                for url in pexels_urls:
+                    if len(downloaded_paths) >= max_assets:
+                        break
+                    path = self._download_asset(url, output_dir, prefix="pexels_", ext=".mp4")
+                    if path:
+                        downloaded_paths.append(path)
+                        consecutive_failures = 0
+                    else:
+                        consecutive_failures += 1
+                        if consecutive_failures >= 2:
+                            logger.warning("Multiple Pexels downloads failed. Skipping remaining.")
+                            break
+                        
+            # 2. Try Unsplash (Images) if we still need assets
+            if len(downloaded_paths) < max_assets and settings.unsplash_api_key:
+                needed = max_assets - len(downloaded_paths)
+                unsplash_urls = self._search_unsplash(query, needed)
+                consecutive_failures = 0
+                for url in unsplash_urls:
+                    if len(downloaded_paths) >= max_assets:
+                        break
+                    path = self._download_asset(url, output_dir, prefix="unsplash_", ext=".jpg")
+                    if path:
+                        downloaded_paths.append(path)
+                        consecutive_failures = 0
+                    else:
+                        consecutive_failures += 1
+                        if consecutive_failures >= 2:
+                            logger.warning("Multiple Unsplash downloads failed. Skipping remaining.")
+                            break
+        except CostGuardError as e:
+            logger.warning("CostGuard limit reached during asset fetching. Using fallbacks.", error=str(e))
                     
         # 3. Local Fallback if no assets could be fetched
         if not downloaded_paths:

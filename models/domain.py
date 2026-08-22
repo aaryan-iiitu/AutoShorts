@@ -28,3 +28,4 @@ class VideoState(BaseModel):
     assets: List[VideoAsset] = []
     final_video_path: Optional[str] = None
     youtube_url: Optional[str] = None
+    audio_path: Optional[str] = None

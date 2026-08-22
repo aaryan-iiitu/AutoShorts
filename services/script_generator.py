@@ -8,13 +8,13 @@ from core.logger import logger
 from models.domain import Script, ScriptSegment
 from services.interfaces import IScriptGenerator
 from utils.retry import api_retry
-from utils.network import get_session
+from utils.retry import api_retry
 
 class GroqScriptGenerator(IScriptGenerator):
     def __init__(self):
         if not settings.groq_api_key:
             raise GenerationError("GROQ_API_KEY is not set.")
-        self.client = Groq(api_key=settings.groq_api_key, http_client=get_session())
+        self.client = Groq(api_key=settings.groq_api_key, timeout=settings.network_timeout_seconds)
 
     @api_retry()
     def generate_script(self, topic: str) -> Script:

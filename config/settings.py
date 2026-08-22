@@ -4,7 +4,7 @@ from pydantic import Field
 class Settings(BaseSettings):
     # Groq Settings
     groq_api_key: str = Field(default="", description="Groq API Key for script generation")
-    groq_model: str = Field(default="llama3-70b-8192", description="Model to use for script generation")
+    groq_model: str = Field(default="openai/gpt-oss-120b", description="Model to use for script generation")
     
     # Visual Provider Settings
     pexels_api_key: str = Field(default="", description="Pexels API Key for free stock videos/images")

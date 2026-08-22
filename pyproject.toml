@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "autoshorts-ai"
 version = "0.1.0"
 description = "A strictly zero-cost automated YouTube Shorts generator."
-readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "groq",
@@ -25,4 +24,13 @@ dependencies = [
 dev = [
     "pytest",
     "pytest-mock"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["config*", "core*", "models*", "services*", "utils*", "tests*"]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
 ]

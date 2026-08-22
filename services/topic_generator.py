@@ -8,14 +8,13 @@ from core.exceptions import QuotaExceededError, GenerationError
 from core.logger import logger
 from services.interfaces import ITopicGenerator
 from utils.retry import api_retry
-from utils.network import get_session
+from utils.retry import api_retry
 
 class GroqTopicGenerator(ITopicGenerator):
     def __init__(self, channel_context: str = "technology"):
         if not settings.groq_api_key:
             raise GenerationError("GROQ_API_KEY is not set.")
-        # Groq client with strict timeout session
-        self.client = Groq(api_key=settings.groq_api_key, http_client=get_session())
+        self.client = Groq(api_key=settings.groq_api_key, timeout=settings.network_timeout_seconds)
         self.channel_context = channel_context
 
     @api_retry()
