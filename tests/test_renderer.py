@@ -50,7 +50,7 @@ def test_renderer_success(mock_run, tmp_path):
     with patch("os.path.exists", side_effect=mock_exists):
         renderer.render_video(state, str(out_path))
         
-    mock_run.assert_called_once()
+    assert mock_run.call_count == 2
     
     cmd_args = mock_run.call_args[0][0]
     assert "ffmpeg" in cmd_args
