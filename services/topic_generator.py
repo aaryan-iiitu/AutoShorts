@@ -37,8 +37,7 @@ class GroqTopicGenerator(ITopicGenerator):
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                temperature=0.7,
-                max_tokens=50
+                temperature=0.7
             )
             topic = response.choices[0].message.content.strip().strip('"').strip("'")
             if not topic:
