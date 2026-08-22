@@ -32,13 +32,22 @@ class FFmpegRenderer(IVideoRenderer):
         
         cmd = ["ffmpeg", "-y"]
         
+        def get_duration(path):
+            try:
+                r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', path], capture_output=True, text=True, check=True)
+                return float(r.stdout.strip())
+            except Exception:
+                return 60.0
+                
+        audio_duration = get_duration(state.audio_path)
+        clip_duration = (audio_duration / len(state.assets)) + 0.5
+
         # Inputs
         for asset in state.assets:
-            # If the asset is an image from Unsplash, we must loop it so it behaves like a video stream
             if asset.filepath.lower().endswith(('.jpg', '.jpeg', '.png')):
-                cmd.extend(["-loop", "1", "-t", "10", "-i", asset.filepath]) # 10 seconds is usually enough for a short clip
+                cmd.extend(["-loop", "1", "-t", str(clip_duration), "-i", asset.filepath])
             else:
-                cmd.extend(["-stream_loop", "-1", "-i", asset.filepath])
+                cmd.extend(["-stream_loop", "-1", "-t", str(clip_duration), "-i", asset.filepath])
             
         cmd.extend(["-i", state.audio_path])
         audio_idx = len(state.assets)
@@ -79,8 +88,8 @@ class FFmpegRenderer(IVideoRenderer):
         
         cmd.extend([
             "-c:v", "libx264",
-            "-preset", "fast",
-            "-crf", "23",
+            "-preset", "ultrafast",
+            "-crf", "28",
             "-c:a", "aac",
             "-b:a", "128k",
             "-shortest",  # Stop when the shortest stream ends (which is our audio duration)
