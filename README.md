@@ -1,12 +1,12 @@
 # AutoShorts AI
 
-AutoShorts AI is an automated YouTube Shorts generator. It generates topics, creates a script, produces Text-to-Speech audio, fetches background visuals, and renders a complete vertical video.
+AutoShorts AI is an automated YouTube Shorts generator. It generates topics, creates a script, produces Text to Speech audio, fetches background visuals and renders a complete vertical video.
 
 ## Features
-- AI Topic & Script Generation
+- AI Topic and Script Generation
 - Edge TTS Narration
 - Automated Video Rendering with FFmpeg
-- Zero-Cost Architecture (CostGuard)
+- Zero Cost Architecture
 - Fallback visual systems
 
 ## Architecture
@@ -25,4 +25,4 @@ If you ever need to re-generate or modify this fallback visual, you can run the 
 ```bash
 python scripts/generate_fallback.py
 ```
-This will locally generate a fresh 60-second animated gradient background using Pillow and FFmpeg without any external dependencies.
+This will locally generate a fresh 60 second animated gradient background using Pillow and FFmpeg without any external dependencies.
