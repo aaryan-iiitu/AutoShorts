@@ -2,8 +2,8 @@ name: Daily AutoShorts Generation
 
 on:
   schedule:
-    # Run once a day at 16:00 UTC
-    - cron: '0 16 * * *'
+    # Run 5 times a day at specific hours UTC
+    - cron: '0 0,5,10,15,20 * * *'
   workflow_dispatch: # Allow manual triggering
 
 jobs:
