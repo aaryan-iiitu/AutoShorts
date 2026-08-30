@@ -1,6 +1,6 @@
 # AutoShorts 
 
-AutoShorts AI is a fully automated, zero cost YouTube Shorts generation pipeline. It autonomously comes up with unique topics, writes engaging scripts, synthesizes human sounding narration, curates stock background visuals, edits them together with captions, and uploads the final video to YouTube all entirely hands free.
+AutoShorts is a fully automated, zero cost YouTube Shorts generation pipeline. It autonomously comes up with unique topics, writes engaging scripts, synthesizes human sounding narration, curates stock background visuals, edits them together with captions, and uploads the final video to YouTube all entirely hands free.
 
 ## Features
 - **Brainstorming & Scripting:** Utilizes Groq for lightning fast, highly engaging script generation.
